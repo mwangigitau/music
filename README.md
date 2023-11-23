@@ -1,3 +1,6 @@
+[![Python application that follows Marcel Demper's guide, but in Python](https://github.com/mwangigitau/music/actions/workflows/devops.yml/badge.svg)](https://github.com/mwangigitau/music/actions/workflows/devops.yml)
+Github Actions failing because I have not written any tests
+
 # Implementation of Marcel Dempers music finding system, but in python
 This follows his tutorial linked below
 
