@@ -1,0 +1,50 @@
+version: "3"
+
+services:
+  music-storage:
+    container_name: music-storage
+    image: apache/couchdb:latest
+    restart: always
+    ports:
+      - "5984:5984"
+    environment:
+      - COUCHDB_ADMIN_USERNAME="admin"
+      - COUCHDB_ADMIN_PASSWORD="password"
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=password
+    volumes:
+      - ./app/storage/data:/opt/couchdb/data
+    networks:
+      - my_network
+
+  message-queue:
+    container_name: music-queue
+    image: rabbitmq:3-management
+    restart: always
+    depends_on:
+      - music-storage
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    environment:
+      - RABBITMQ_DEFAULT_USER=user
+      - RABBITMQ_DEFAULT_PASS=password
+    networks:
+      - my_network
+
+  backend:
+    build: .
+    tty: true
+    container_name: music_downloader_fastapi
+    restart: always
+    depends_on:
+      - message-queue
+    volumes:
+      - .:/app
+    ports:
+      - "8080:8080"
+    networks:
+      - my_network
+
+networks:
+  my_network:
